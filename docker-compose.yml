@@ -1,0 +1,18 @@
+version: '3'
+services:
+  producer:
+    build: .
+    restart: always
+    volumes:
+      - ./pg_data/producer:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+  subscriber:
+    build: .
+    restart: always
+    volumes:
+      - ./pg_data/subscriber:/var/lib/postgresql/data
+    ports:
+      - "5434:5432"
+    depends_on:
+      - producer
