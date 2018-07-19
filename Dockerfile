@@ -10,4 +10,5 @@ ENTRYPOINT ["docker-entrypoint.sh", \
             "-cmax_worker_processes=10", \
             "-cmax_worker_processes=10", \
             "-cshared_preload_libraries=pglogical", \
+            "-ctrack_commit_timestamp=on", \
             "-cwal_level=logical"]
