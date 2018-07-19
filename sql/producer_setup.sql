@@ -1,6 +1,6 @@
 SELECT pglogical.create_node(
     node_name := 'provider1',
-    dsn := 'host=producer port=5433 dbname=postgres'
+    dsn := 'host=producer port=5433 dbname=postgres password=mysecretpassword'
 );
 
 
@@ -13,4 +13,5 @@ SELECT pglogical.create_replication_set(
 
 SELECT pglogical.replication_set_add_table(
   'postgres_replication_set',
-  'widgets');
+  'widgets',
+  true);
