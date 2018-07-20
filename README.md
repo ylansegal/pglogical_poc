@@ -144,12 +144,47 @@ Things to evaluate:
 - [x] Delete some data from producer, notice that it is *not* deleted in subscriber
 - [x] Truncate data in producer, notice that it is *not* deleted in subscriber
 - [x] Stop subscriber (`docker-compose stop subscriber`). Insert more data in provider. Start subscriber (`docker-compose start subscriber`). Notice new data is available in subscriber.
-- [ ] Alter the table structure, notice the changes propagate to subscriber
-  ```sql
-  ALTER TABLE widgets ALTER COLUMN name SET NOT NULL;
-  ```
-  > Automatic DDL replication is not supported. Managing DDL so that the provider and subscriber database(s) remain compatible is the responsibility of the user.
-  pglogical provides the pglogical.replicate_ddl_command function to allow DDL to be run on the provider and subscriber at a consistent point.
+
+# Caveats
+
+From the `pglogical` documentation:
+
+> Automatic DDL replication is not supported. Managing DDL so that the provider and subscriber database(s) remain compatible is the responsibility of the user.
+pglogical provides the pglogical.replicate_ddl_command function to allow DDL to be run on the provider and subscriber at a consistent point.
+
+That means that regular DDL statemnts issued on the producer, like:
+```sql
+ALTER TABLE widgets ALTER COLUMN name SET NOT NULL;
+```
+
+Do not propagate to the subscriber. Data will continue to propagate, as long as the subscriber schema is more permissive than the producer, like in the case above.
+
+In order for DDL statements to propagate, they need to be issued through `pglogical`:
+
+On the producer node:
+
+```
+=# SELECT pglogical.replicate_ddl_command(
+  command := 'ALTER TABLE public.widgets ALTER COLUMN name SET NOT NULL;',
+  replication_sets := '{postgres_replication_set}');
+```
+
+On the subscriber, we can inspect the changes:
+
+```
+=# \d widgets
+                                     Table "public.widgets"
+   Column   |            Type             |                      Modifiers
+------------+-----------------------------+------------------------------------------------------
+ id         | bigint                      | not null default nextval('widgets_id_seq'::regclass)
+ name       | text                        | not null
+ created_at | timestamp without time zone |
+ updated_at | timestamp without time zone |
+Indexes:
+    "widgets_pkey" PRIMARY KEY, btree (id)
+```
+
+Using `pglogical.replicate_ddl_command` works even it's used while the subscriber is down: As soon as communication is restored, the schema is applied correctly.
 
 [pglogical]: https://www.2ndquadrant.com/en/resources/pglogical/pglogical-docs/
 [postgres-image]: https://hub.docker.com/_/postgres/
