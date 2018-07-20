@@ -1,6 +1,3 @@
-CREATE EXTENSION IF NOT EXISTS  pglogical; -- On all nodesz
--- CREATE EXTENSION pglogical_origin; -- Only needed for PostgreSQL 9.4
-
 CREATE TABLE widgets (
     id bigint NOT NULL,
     name text,
