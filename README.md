@@ -186,5 +186,12 @@ Indexes:
 
 Using `pglogical.replicate_ddl_command` works even it's used while the subscriber is down: As soon as communication is restored, the schema is applied correctly.
 
+# Ruby and Rails
+
+There is a gem, [pg-pglogical][gem] that exists to make a few pglogical operations easier from Ruby/Rails. It appears to wrap the most common pglogical functions in ruby. This allows ruby code to easily use it to check on replication progress, list which tables are in a replica set, add subscribers, etc.
+
+The gem does *not* have support for the functions to replicate DDL statements. However, it appears that it would be straightforward to add that support, if it is needed.A
+
 [pglogical]: https://www.2ndquadrant.com/en/resources/pglogical/pglogical-docs/
 [postgres-image]: https://hub.docker.com/_/postgres/
+[gem]: https://github.com/ManageIQ/pg-pglogical
