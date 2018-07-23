@@ -15,7 +15,7 @@ $ docker-compose build
 $ docker-compose start
 ```
 
-This will start two containers: a `producer` and a `subscriber`. Things to note:
+This will start two containers: a `producer` and a `subscriber`. Note that:
 - The default database, user and password are set in the [underlying image for postgres 9.5.13][postgres-image]
 - The producer is mapped to the local 5433 port.
 - The subscriber is mapped to the local 5434 port.
@@ -138,7 +138,7 @@ Replication is now setup between the two databases. We can confirm on the subscr
 Time: 14.624 ms
 ```
 
-Things to evaluate:
+# Evaluation:
 - [x] Insert more data in producer, watch it appear on the subscriber
 - [x] Update some data in producer, watch it upgrade in subscriber
 - [x] Delete some data from producer, notice that it is *not* deleted in subscriber
