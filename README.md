@@ -144,6 +144,7 @@ Time: 14.624 ms
 - [x] Delete some data from producer, notice that it is *not* deleted in subscriber
 - [x] Truncate data in producer, notice that it is *not* deleted in subscriber
 - [x] Stop subscriber (`docker-compose stop subscriber`). Insert more data in provider. Start subscriber (`docker-compose start subscriber`). Notice new data is available in subscriber.
+- [x] Replication works when adding a new field in the subscriber that is not present in the producer, as long as the inserts can be done without specifying the field. As an example, `sql/add_replicated_at.sql` add a new timestamp table, which gets populated correctly with `NOW()` when replicating rows from producer to subscriber.
 
 # Caveats
 
